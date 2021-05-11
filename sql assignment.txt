@@ -1,0 +1,239 @@
+ 1)hotel menu
+
+
+create table hotel(id bigint(20) primary key,food_name varchar(255),rate bigint(20));
+
+desc hotel;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| id        | bigint       | NO   | PRI | NULL    |       |
+| food_name | varchar(255) | YES  |     | NULL    |       |
+| rate      | bigint       | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+
+alter table hotel add food_type varchar(20);
+alter table hotel add place varchar(20);
+
+desc hotel;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| id        | bigint       | NO   | PRI | NULL    |       |
+| food_name | varchar(255) | YES  |     | NULL    |       |
+| rate      | bigint       | YES  |     | NULL    |       |
+| food_type | varchar(20)  | YES  |     | NULL    |       |
+| place     | varchar(20)  | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+
+select * from hotel;
++----+------------------+------+-----------+----------------+
+| id | food_name        | rate | food_type | place          |
++----+------------------+------+-----------+----------------+
+|  1 | chiken biriyani  |  250 | non veg   | donne biriyani |
+|  2 | chiken friedrice |  250 | non veg   | niyaz          |
+|  3 | butter roti      |   50 | veg       | donne biriyani |
+|  4 | egg masal        |  150 | non veg   | niyaz          |
+|  5 | chiken lollipop  |  250 | non veg   | donne biriyani |
++----+------------------+------+-----------+----------------+
+
+2)JOINS
+
+EMPLOYEE TABLE
+
+ select * from employee;
++-------+--------+------+----------+------+------+--------+-----------+
+| empno | ename  | mgr  | hiredate | sal  | comm | deptno | job       |
++-------+--------+------+----------+------+------+--------+-----------+
+|  7566 | jones  | 7566 | 22may82  | 2975 |  340 |     10 | manager   |
+|  7369 | smith  | 7902 | 17dec80  |  800 |  300 |     20 | clerk     |
+|  7499 | allen  | 7698 | 20feb81  | 1600 |  320 |     30 | salesman  |
+|  7521 | ward   | 7698 | 22feb81  | 1250 |  340 |     40 | salesman  |
+|  7654 | martin | 7698 | 28sep81  | 1250 |  380 |     50 | salesman  |
+|  7788 | scott  | 7566 | 19apr87  | 3000 |  400 |     60 | analyst   |
+|  7839 | king   | 7566 | 17nov81  | 5000 |  480 |     70 | president |
++-------+--------+------+----------+------+------+--------+-----------+
+
+DEPT TABLE
+
+select * from dept;
++--------+------------+----------+
+| deptno | dname      | loc      |
++--------+------------+----------+
+|     10 | accounting | new york |
+|     20 | research   | dallas   |
+|     30 | sales      | chicago  |
+|     40 | developers | boston   |
++--------+------------+----------+
+
+INNER JOIN
+
+ select ename,dname,loc from employee inner join dept on employee.deptno=dept.deptno;
++-------+------------+----------+
+| ename | dname      | loc      |
++-------+------------+----------+
+| jones | accounting | new york |
+| smith | research   | dallas   |
+| allen | sales      | chicago  |
+| ward  | developers | boston   |
++-------+------------+----------+
+
+RIGHT OUTER JOIN
+
+ select ename,dname,loc from employee right outer join dept on employee.deptno=dept.deptno;
++-------+------------+----------+
+| ename | dname      | loc      |
++-------+------------+----------+
+| jones | accounting | new york |
+| smith | research   | dallas   |
+| allen | sales      | chicago  |
+| ward  | developers | boston   |
++-------+------------+----------+
+
+left outer join
+
+ select ename,dname,loc from employee left outer join dept on employee.deptno=dept.deptno;
++--------+------------+----------+
+| ename  | dname      | loc      |
++--------+------------+----------+
+| jones  | accounting | new york |
+| smith  | research   | dallas   |
+| allen  | sales      | chicago  |
+| ward   | developers | boston   |
+| martin | NULL       | NULL     |
+| scott  | NULL       | NULL     |
+| king   | NULL       | NULL     |
++--------+------------+----------+
+
+full outer join
+
+ select ename,dname,loc from employee right outer join dept on employee.deptno=dept.deptno
+    -> union
+    -> select ename,dname,loc from employee left outer join dept on employee.deptno=dept.deptno;
++--------+------------+----------+
+| ename  | dname      | loc      |
++--------+------------+----------+
+| jones  | accounting | new york |
+| smith  | research   | dallas   |
+| allen  | sales      | chicago  |
+| ward   | developers | boston   |
+| martin | NULL       | NULL     |
+| scott  | NULL       | NULL     |
+| king   | NULL       | NULL     |
++--------+------------+----------+
+
+
+3) SUB-QUERY
+
+
+1.display all the employee whose job will be same as allen's job.
+
+ select * from employee where job=(select job from employee where ename='allen');
++-------+--------+------+----------+------+------+--------+----------+
+| empno | ename  | mgr  | hiredate | sal  | comm | deptno | job      |
++-------+--------+------+----------+------+------+--------+----------+
+|  7499 | allen  | 7698 | 20feb81  | 1600 |  320 |     30 | salesman |
+|  7521 | ward   | 7698 | 22feb81  | 1250 |  340 |     40 | salesman |
+|  7654 | martin | 7698 | 28sep81  | 1250 |  380 |     50 | salesman |
++-------+--------+------+----------+------+------+--------+----------+
+
+2.display all the employee who are earning max salary.
+
+ select * from employee where sal=(select max(sal) from employee);
++-------+-------+------+----------+------+------+--------+-----------+
+| empno | ename | mgr  | hiredate | sal  | comm | deptno | job       |
++-------+-------+------+----------+------+------+--------+-----------+
+|  7839 | king  | 7566 | 17nov81  | 5000 |  480 |     70 | president |
++-------+-------+------+----------+------+------+--------+-----------+
+
+
+3.display all the employee who are earning more than allen salary.
+
+select * from employee where sal>(select sal from employee where ename='allen');
++-------+-------+------+----------+------+------+--------+-----------+
+| empno | ename | mgr  | hiredate | sal  | comm | deptno | job       |
++-------+-------+------+----------+------+------+--------+-----------+
+|  7566 | jones | 7566 | 22may82  | 2975 |  340 |     10 | manager   |
+|  7788 | scott | 7566 | 19apr87  | 3000 |  400 |     60 | analyst   |
+|  7839 | king  | 7566 | 17nov81  | 5000 |  480 |     70 | president |
++-------+-------+------+----------+------+------+--------+-----------+
+
+4.display all the employee who are working newyork location.
+
+ select * from employee where deptno=(select deptno from dept where loc='new york');
++-------+-------+------+----------+------+------+--------+---------+
+| empno | ename | mgr  | hiredate | sal  | comm | deptno | job     |
++-------+-------+------+----------+------+------+--------+---------+
+|  7566 | jones | 7566 | 22may82  | 2975 |  340 |     10 | manager |
++-------+-------+------+----------+------+------+--------+---------+
+
+5. display the 2nd maximum salary for all the employee.
+
+ select * from employee where sal=(select max(sal) from employee where sal<(select max(sal) from employee));
++-------+-------+------+----------+------+------+--------+---------+
+| empno | ename | mgr  | hiredate | sal  | comm | deptno | job     |
++-------+-------+------+----------+------+------+--------+---------+
+|  7788 | scott | 7566 | 19apr87  | 3000 |  400 |     60 | analyst |
++-------+-------+------+----------+------+------+--------+---------+
+
+
+6.display all the employee where manager details will be same as martins manager.
+
+select * from employee where mgr=(select mgr from employee where ename='martin');
++-------+--------+------+----------+------+------+--------+----------+
+| empno | ename  | mgr  | hiredate | sal  | comm | deptno | job      |
++-------+--------+------+----------+------+------+--------+----------+
+|  7499 | allen  | 7698 | 20feb81  | 1600 |  320 |     30 | salesman |
+|  7521 | ward   | 7698 | 22feb81  | 1250 |  340 |     40 | salesman |
+|  7654 | martin | 7698 | 28sep81  | 1250 |  380 |     50 | salesman |
++-------+--------+------+----------+------+------+--------+----------+
+
+7.display the department name where employees are present.
+
+select dname,loc from dept where deptno in(select deptno from employee);
++------------+----------+
+| dname      | loc      |
++------------+----------+
+| accounting | new york |
+| research   | dallas   |
+| sales      | chicago  |
+| developers | boston   |
++------------+----------+
+
+8.display the employee whose location is having at least one 'o' in it.
+
+ select * from employee where deptno in(select deptno from dept where loc like '%o%');
++-------+-------+------+----------+------+------+--------+----------+
+| empno | ename | mgr  | hiredate | sal  | comm | deptno | job      |
++-------+-------+------+----------+------+------+--------+----------+
+|  7566 | jones | 7566 | 22may82  | 2975 |  340 |     10 | manager  |
+|  7499 | allen | 7698 | 20feb81  | 1600 |  320 |     30 | salesman |
+|  7521 | ward  | 7698 | 22feb81  | 1250 |  340 |     40 | salesman |
++-------+-------+------+----------+------+------+--------+----------+
+
+9.list the employees in research and sales department.
+
+select * from employee where deptno in(select deptno from dept where dname in('research','sales'));
++-------+-------+------+----------+------+------+--------+----------+
+| empno | ename | mgr  | hiredate | sal  | comm | deptno | job      |
++-------+-------+------+----------+------+------+--------+----------+
+|  7369 | smith | 7902 | 17dec80  |  800 |  300 |     20 | clerk    |
+|  7499 | allen | 7698 | 20feb81  | 1600 |  320 |     30 | salesman |
++-------+-------+------+----------+------+------+--------+----------+
+
+10. display all the employee who are earning more than any of the analyst.
+
+
+select * from employee where sal< any(select sal from employee where job='analyst');
++-------+--------+------+----------+------+------+--------+----------+
+| empno | ename  | mgr  | hiredate | sal  | comm | deptno | job      |
++-------+--------+------+----------+------+------+--------+----------+
+|  7566 | jones  | 7566 | 22may82  | 2975 |  340 |     10 | manager  |
+|  7369 | smith  | 7902 | 17dec80  |  800 |  300 |     20 | clerk    |
+|  7499 | allen  | 7698 | 20feb81  | 1600 |  320 |     30 | salesman |
+|  7521 | ward   | 7698 | 22feb81  | 1250 |  340 |     40 | salesman |
+|  7654 | martin | 7698 | 28sep81  | 1250 |  380 |     50 | salesman |
++-------+--------+------+----------+------+------+--------+----------+
+
+
+
